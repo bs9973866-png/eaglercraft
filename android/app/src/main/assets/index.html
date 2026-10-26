@@ -33,7 +33,7 @@
       <div class="hero-copy">
         <div class="eyebrow"><span>✦</span> BROWSER GAME LAUNCHER</div>
         <h1>Твой мир.<br><span class="gradient-text">Твой следующий шаг.</span></h1>
-        <p>Запускай совместимые Eaglercraft-клиенты в WebView, проверяй возможности устройства или добавь свой автономный HTML-клиент.</p>
+        <p>Eaglercraft 1.8.8 запускается прямо внутри NovaBlock: клиент скачивается один раз и сохраняется в приложении. На телефоне игра автоматически включает сенсорное управление.</p>
         <div class="hero-actions">
           <label class="select-wrap"><select id="hero-version" class="select" aria-label="Выбрать версию"><option value="1.8.8">1.8.8 · Stable</option><option value="1.12.2">1.12.2 · Dev</option><option value="26.3">26.3 · Preview</option><option value="26.2">26.2</option><option value="1.5.2">1.5.2 · Legacy</option></select></label>
           <button class="button primary" id="hero-launch">▶ &nbsp; ЗАПУСТИТЬ ИГРУ</button>
@@ -41,7 +41,7 @@
         </div>
         <div class="hero-foot">
           <div class="metric"><div class="metric-ico">◈</div><div><b>WebGL</b><span>графический рендер</span></div></div>
-          <div class="metric"><div class="metric-ico">ϟ</div><div><b>WASM / WASM-GC</b><span>автовыбор клиента</span></div></div>
+          <div class="metric"><div class="metric-ico">ϟ</div><div><b>JS / WebGL</b><span>локальный клиент</span></div></div>
           <div class="metric"><div class="metric-ico">◉</div><div><b>Android 7+</b><span>WebView runtime</span></div></div>
         </div>
       </div>
@@ -60,13 +60,13 @@
   </section>
 
   <section class="page" id="page-versions">
-    <h1 class="page-title">Библиотека версий</h1><p class="page-intro">Здесь показаны версии, для которых найден публичный браузерный клиент Eaglercraft. Это не каталог обычных Java Edition/JVM версий Minecraft.</p>
+    <h1 class="page-title">Библиотека версий</h1><p class="page-intro">Здесь показаны версии, для которых найден публичный браузерный клиент Eaglercraft. Версия 1.8.8 открывается из локальной копии внутри приложения; другие браузерные версии запускаются во встроенном WebView. Это не каталог обычных Java Edition/JVM версий Minecraft.</p>
     <div class="version-list">
-      <article class="version-card featured"><div class="version-top"><div class="version-icon">⚔</div><span class="tag stable">STABLE</span></div><h3>EaglercraftX 1.8.8</h3><p>Самый совместимый и распространённый браузерный клиент из списка.</p><div class="card-foot"><small>Онлайн / автономный HTML</small><button class="button small primary" data-launch="1.8.8">Запустить →</button></div></article>
-      <article class="version-card"><div class="version-top"><div class="version-icon">◇</div><span class="tag">DEVELOPMENT</span></div><h3>Eaglercraft 1.12.2</h3><p>Порт в разработке; фактическая производительность зависит от сборки и WebView.</p><div class="card-foot"><small>Онлайн / автономный HTML</small><button class="button small primary" data-launch="1.12.2">Запустить →</button></div></article>
-      <article class="version-card"><div class="version-top"><div class="version-icon">✦</div><span class="tag">MODERN</span></div><h3>Eaglercraft 26.2</h3><p>Современная браузерная сборка, для которой доступен автономный пакет.</p><div class="card-foot"><small>Онлайн-клиент</small><button class="button small primary" data-launch="26.2">Запустить →</button></div></article>
-      <article class="version-card"><div class="version-top"><div class="version-icon">✧</div><span class="tag">PREVIEW</span></div><h3>Eaglercraft 26.3</h3><p>Предварительная сборка; стабильность и требования могут отличаться.</p><div class="card-foot"><small>Онлайн-клиент</small><button class="button small primary" data-launch="26.3">Запустить →</button></div></article>
-      <article class="version-card"><div class="version-top"><div class="version-icon">▤</div><span class="tag">LEGACY</span></div><h3>Eaglercraft 1.5.2</h3><p>Старая версия, полезная для старых серверов и классического опыта.</p><div class="card-foot"><small>Онлайн-клиент</small><button class="button small primary" data-launch="1.5.2">Запустить →</button></div></article>
+      <article class="version-card featured"><div class="version-top"><div class="version-icon">⚔</div><span class="tag stable">STABLE</span></div><h3>EaglercraftX 1.8.8</h3><p>Полноценный клиент EaglercraftX 1.8.8. Первый запуск скачивает его в память приложения; дальше доступен офлайн и с экранным управлением.</p><div class="card-foot"><small>В приложении · офлайн после загрузки</small><button class="button small primary" data-launch="1.8.8">Играть →</button></div></article>
+      <article class="version-card"><div class="version-top"><div class="version-icon">◇</div><span class="tag">DEVELOPMENT</span></div><h3>Eaglercraft 1.12.2</h3><p>Порт в разработке; фактическая производительность зависит от сборки и WebView.</p><div class="card-foot"><small>Встроенный WebView</small><button class="button small primary" data-launch="1.12.2">Играть →</button></div></article>
+      <article class="version-card"><div class="version-top"><div class="version-icon">✦</div><span class="tag">MODERN</span></div><h3>Eaglercraft 26.2</h3><p>Современная браузерная сборка, для которой доступен автономный пакет.</p><div class="card-foot"><small>Встроенный WebView</small><button class="button small primary" data-launch="26.2">Играть →</button></div></article>
+      <article class="version-card"><div class="version-top"><div class="version-icon">✧</div><span class="tag">PREVIEW</span></div><h3>Eaglercraft 26.3</h3><p>Предварительная сборка; стабильность и требования могут отличаться.</p><div class="card-foot"><small>Встроенный WebView</small><button class="button small primary" data-launch="26.3">Играть →</button></div></article>
+      <article class="version-card"><div class="version-top"><div class="version-icon">▤</div><span class="tag">LEGACY</span></div><h3>Eaglercraft 1.5.2</h3><p>Старая версия, полезная для старых серверов и классического опыта.</p><div class="card-foot"><small>Встроенный WebView</small><button class="button small primary" data-launch="1.5.2">Играть →</button></div></article>
       <article class="version-card"><div class="version-top"><div class="version-icon">⬆</div><span class="tag">LOCAL CLIENT</span></div><h3>Свой HTML-клиент</h3><p>Импортируй одностраничный автономный клиент, если он не включён в каталог.</p><div class="card-foot"><small>Файл на устройстве</small><button class="button small" data-page="offline">Импорт →</button></div></article>
     </div>
     <div class="note"><strong>Важно:</strong> стандартные Java-версии вроде 1.8.9, 1.16.5, 1.20.4 и 1.21.11 не запускаются автоматически одним только WebView. Для них нужен отдельный совместимый клиент/рантайм; в этом приложении не подменяем их несуществующими сборками.</div>
@@ -96,7 +96,7 @@
     </div>
   </section>
 
-  <footer class="footer"><span>NovaBlock • community browser launcher</span><span>Клиент Eaglercraft загружается отдельно. <a href="https://dev.eaglercraft.com/downloads" id="downloads-link">Официальные загрузки ↗</a></span></footer>
+  <footer class="footer"><span>NovaBlock • community browser launcher</span><span>Клиент 1.8.8 загружается один раз в приложение. <a href="https://dev.eaglercraft.com/downloads" id="downloads-link">Официальные загрузки ↗</a></span></footer>
 </main>
 </div>
 <script>
