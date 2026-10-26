@@ -1,59 +1,120 @@
 name: NovaBlock Android APK
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
+      - name: Set up Node.js for launcher-script checks
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
-      - name: Verify Android project
-        working-directory: android
-        run: gradle :app:tasks --no-daemon
+
+      - name: Validate launcher HTML and JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+
+          path = Path("android/app/src/main/assets/index.html")
+          html = path.read_text(encoding="utf-8")
+          required = [
+              'id="hero-launch"',
+              'id="import-runtime"',
+              'id="webgl2-status"',
+              'data-launch="1.8.8"',
+              'https://dev.eaglercraft.com/play?version='
+          ]
+          missing = [item for item in required if item not in html]
+          if missing:
+              raise SystemExit("Missing launcher feature(s): " + ", ".join(missing))
+
+          class CheckParser(HTMLParser):
+              pass
+
+          CheckParser().feed(html)
+          scripts = re.findall(r"<script>(.*?)</script>", html, flags=re.DOTALL)
+          if not scripts:
+              raise SystemExit("No inline launcher JavaScript found")
+          Path("/tmp/novablock-launcher.js").write_text("\n".join(scripts), encoding="utf-8")
+          print(f"HTML parsed; checked {len(scripts)} inline script(s).")
+          PY
+          node --check /tmp/novablock-launcher.js
+
       - name: Build debug APK
         working-directory: android
         run: gradle :app:assembleDebug --stacktrace --no-daemon
-      - name: Verify APK package and signature
+
+      - name: Verify APK package, archive and signature
         shell: bash
         run: |
           set -euo pipefail
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
           test -s "$APK"
           unzip -t "$APK" >/dev/null
-          SIGNER="$(find "${ANDROID_HOME:-/usr/local/lib/android/sdk}/build-tools" -name apksigner -type f 2>/dev/null | sort -V | tail -n 1 || true)"
+
+          SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          AAPT="$(find "$SDK_ROOT/build-tools" -name aapt -type f 2>/dev/null | sort -V | tail -n 1 || true)"
+          SIGNER="$(find "$SDK_ROOT/build-tools" -name apksigner -type f 2>/dev/null | sort -V | tail -n 1 || true)"
+
+          if [ -n "$AAPT" ]; then
+            "$AAPT" dump badging "$APK" | grep -F "package: name='net.novablock.app' versionCode='3' versionName='0.3.0'"
+          else
+            echo "aapt not found; package name/version check skipped."
+          fi
+
           if [ -n "$SIGNER" ]; then
             "$SIGNER" verify --verbose "$APK"
           else
-            echo "apksigner not found; APK ZIP integrity was verified."
+            echo "apksigner not found; signature verification skipped."
           fi
+
           mkdir -p dist
           cp "$APK" dist/NovaBlock-Android-debug.apk
-          sha256sum dist/NovaBlock-Android-debug.apk > dist/SHA256SUMS.txt
+          (
+            cd dist
+            sha256sum NovaBlock-Android-debug.apk > SHA256SUMS.txt
+          )
           cat > dist/INSTALL.txt <<'EOF'
-          NovaBlock Android build
-          
-          Install NovaBlock-Android-debug.apk on Android 7.0+.
-          This is an installable debug-signed APK. Future debug builds may not update
-          over this one if a different debug signing key is used.
-          
-          The app launches verified public Eaglercraft web builds online and can load
-          a user-provided, standalone offline HTML client. An offline client is not
-          bundled due to its separate distribution/licensing requirements.
+          NovaBlock Android 0.3.0
+
+          Install NovaBlock-Android-debug.apk on Android 7.0 or newer.
+          This is an installable debug-signed APK for testing. A future build signed
+          with a different debug key may not update over this installation.
+
+          Includes the NovaBlock launcher UI, online Eaglercraft client shortcuts,
+          WebGL/WebAssembly diagnostics, and import for a user-supplied standalone
+          offline HTML client. A full offline game runtime is not bundled.
           EOF
-      - name: Upload installable APK and checksums
+          printf 'Commit: %s\nBuild: %s\n' "$GITHUB_SHA" "$GITHUB_RUN_NUMBER" > dist/BUILD-INFO.txt
+          ls -lh dist
+
+      - name: Upload installable APK and build verification files
         uses: actions/upload-artifact@v4
         with:
           name: NovaBlock-Android-0.3.0
@@ -61,5 +122,6 @@ jobs:
             dist/NovaBlock-Android-debug.apk
             dist/SHA256SUMS.txt
             dist/INSTALL.txt
+            dist/BUILD-INFO.txt
           if-no-files-found: error
           compression-level: 0
