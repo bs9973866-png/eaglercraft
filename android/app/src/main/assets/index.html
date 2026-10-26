@@ -1,1 +1,25 @@
-<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;height:100%;background:#090811;color:#fff;font-family:sans-serif}body{display:grid;place-items:center}.box{width:min(720px,88%);padding:28px;border:1px solid #30263f;border-radius:24px;background:#151122;text-align:center}.pink{color:#ff4fa3}.muted{color:#aaa4bd}button{padding:14px 22px;border:0;border-radius:14px;background:linear-gradient(135deg,#ff4fa3,#a54dff);color:#fff;font-weight:800}</style><div class="box"><h1>NOVA<span class="pink">BLOCK</span></h1><h2>Android runtime shell</h2><p class="muted">APK готов. Игровой Eaglercraft runtime должен быть добавлен в assets/runtime/ из разрешённого источника перед запуском игры.</p><button onclick="location.reload()">RELOAD</button></div>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NOVABLOCK Eagler Runtime</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090811;color:#fff;font-family:system-ui,sans-serif}#app{height:100%;display:flex;flex-direction:column}.top{padding:14px 18px;background:#151122;border-bottom:1px solid #30263f;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.brand{font-weight:900;font-size:20px}.pink{color:#ff4fa3}.status{font-size:12px;color:#aaa4bd;margin-left:auto}button{border:0;border-radius:12px;padding:11px 15px;background:#242039;color:#fff;font-weight:800}button.active{background:linear-gradient(135deg,#ff4fa3,#a54dff)}#game{flex:1;border:0;width:100%;background:#000}#boot{position:absolute;inset:0;display:grid;place-items:center;background:#090811}.box{width:min(720px,88%);padding:26px;border:1px solid #30263f;border-radius:24px;background:#151122;box-shadow:0 20px 70px #0008;text-align:center}.muted{color:#aaa4bd;line-height:1.5}.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}.hidden{display:none}</style>
+</head>
+<body>
+<div id="app">
+ <div class="top"><div class="brand">NOVA<span class="pink">BLOCK</span></div><button id="v188" class="active">1.8.8</button><button id="v112">1.12.2</button><button id="v262">26.2</button><button id="wasm">WASM-GC: auto</button><span id="status" class="status">проверка WebGL…</span></div>
+ <iframe id="game" allow="autoplay; fullscreen; gamepad; microphone" allowfullscreen></iframe>
+</div>
+<div id="boot"><div class="box"><h1>Браузерный игровой runtime</h1><p class="muted">WebGL renderer + автоматический выбор WASM-GC. Игра запускается как браузерный Eaglercraft-клиент внутри APK.</p><div class="row"><button id="start" class="active">ЗАПУСТИТЬ 1.8.8</button></div><p id="diag" class="muted"></p></div></div>
+<script>
+const game=document.getElementById('game'),boot=document.getElementById('boot'),status=document.getElementById('status'),diag=document.getElementById('diag');
+let version='1.8.8';
+function webgl(){const c=document.createElement('canvas');const g=c.getContext('webgl2')||c.getContext('webgl');return g?g.getParameter(g.RENDERER):null}
+async function wasmGC(){try{return typeof WebAssembly!=='undefined'&&typeof WebAssembly.GC!=='undefined'&&typeof WebAssembly.Function!=='undefined'}catch(e){return false}}
+(async()=>{const r=webgl();const w=await wasmGC();status.textContent=(r?'WebGL renderer: OK':'WebGL: unavailable')+(w?' · WASM-GC: OK':' · WASM-GC: fallback JS');diag.textContent='Renderer: '+(r||'не найден')+' · WASM-GC: '+(w?'доступен':'недоступен, будет JS runtime');})();
+function launch(v){version=v;document.getElementById('start').textContent='ЗАПУСТИТЬ '+v;game.src='https://dev.eaglercraft.com/play?version='+encodeURIComponent(v);boot.classList.add('hidden')}
+for(const [id,v] of [['v188','1.8.8'],['v112','1.12.2'],['v262','26.2']])document.getElementById(id).onclick=()=>launch(v);
+document.getElementById('start').onclick=()=>launch(version);
+document.getElementById('wasm').onclick=async()=>{const ok=await wasmGC();document.getElementById('wasm').textContent=ok?'WASM-GC: supported':'WASM-GC: JS fallback'};
+</script></body></html>
