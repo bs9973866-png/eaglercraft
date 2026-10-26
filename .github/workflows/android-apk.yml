@@ -1,13 +1,13 @@
 name: NovaBlock Android APK
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,9 +26,40 @@ jobs:
       - name: Build debug APK
         working-directory: android
         run: gradle :app:assembleDebug --stacktrace --no-daemon
-      - name: Upload APK artifact
+      - name: Verify APK package and signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          unzip -t "$APK" >/dev/null
+          SIGNER="$(find "${ANDROID_HOME:-/usr/local/lib/android/sdk}/build-tools" -name apksigner -type f 2>/dev/null | sort -V | tail -n 1 || true)"
+          if [ -n "$SIGNER" ]; then
+            "$SIGNER" verify --verbose "$APK"
+          else
+            echo "apksigner not found; APK ZIP integrity was verified."
+          fi
+          mkdir -p dist
+          cp "$APK" dist/NovaBlock-Android-debug.apk
+          sha256sum dist/NovaBlock-Android-debug.apk > dist/SHA256SUMS.txt
+          cat > dist/INSTALL.txt <<'EOF'
+          NovaBlock Android build
+          
+          Install NovaBlock-Android-debug.apk on Android 7.0+.
+          This is an installable debug-signed APK. Future debug builds may not update
+          over this one if a different debug signing key is used.
+          
+          The app launches verified public Eaglercraft web builds online and can load
+          a user-provided, standalone offline HTML client. An offline client is not
+          bundled due to its separate distribution/licensing requirements.
+          EOF
+      - name: Upload installable APK and checksums
         uses: actions/upload-artifact@v4
         with:
-          name: NovaBlock-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: NovaBlock-Android-0.3.0
+          path: |
+            dist/NovaBlock-Android-debug.apk
+            dist/SHA256SUMS.txt
+            dist/INSTALL.txt
           if-no-files-found: error
+          compression-level: 0
