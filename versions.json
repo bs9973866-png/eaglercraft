@@ -1,0 +1,14 @@
+{
+  "name": "NovaBlock version catalog",
+  "note": "Version entries describe targets; browser runtimes must be supplied separately and legally.",
+  "versions": [
+    {"id":"1.8.9","type":"legacy","status":"planned","runtime":"eagler-compatible"},
+    {"id":"1.12.2","type":"legacy","status":"available-target","runtime":"eagler-compatible"},
+    {"id":"1.16.5","type":"modern","status":"experimental","runtime":"wasm"},
+    {"id":"1.20.4","type":"modern","status":"planned","runtime":"wasm"},
+    {"id":"1.21.11","type":"modern","status":"experimental","runtime":"wasm"},
+    {"id":"26.1","type":"modern","status":"experimental","runtime":"wasm-gc/webgpu"},
+    {"id":"26.2","type":"modern","status":"experimental","runtime":"wasm-gc/webgpu"},
+    {"id":"26.3","type":"modern","status":"experimental","runtime":"wasm-gc/webgpu"}
+  ]
+}
