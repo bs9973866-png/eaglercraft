@@ -54,6 +54,17 @@ jobs:
           if missing:
               raise SystemExit("Missing launcher feature(s): " + ", ".join(missing))
 
+          main_activity = Path("android/app/src/main/java/net/novablock/app/MainActivity.java").read_text(encoding="utf-8")
+          runtime_required = [
+              "launchEmbedded188",
+              "EaglercraftX_1.8_u53_Offline_Signed.zip",
+              "RuntimePathHandler",
+              "buildAutoLaunchScript",
+          ]
+          missing_runtime = [item for item in runtime_required if item not in main_activity]
+          if missing_runtime:
+              raise SystemExit("Missing runtime feature(s): " + ", ".join(missing_runtime))
+
           class CheckParser(HTMLParser):
               pass
 
@@ -83,7 +94,7 @@ jobs:
           SIGNER="$(find "$SDK_ROOT/build-tools" -name apksigner -type f 2>/dev/null | sort -V | tail -n 1 || true)"
 
           if [ -n "$AAPT" ]; then
-            "$AAPT" dump badging "$APK" | grep -F "package: name='net.novablock.app' versionCode='3' versionName='0.3.0'"
+            "$AAPT" dump badging "$APK" | grep -F "package: name='net.novablock.app' versionCode='4' versionName='0.4.0'"
           else
             echo "aapt not found; package name/version check skipped."
           fi
@@ -101,15 +112,18 @@ jobs:
             sha256sum NovaBlock-Android-debug.apk > SHA256SUMS.txt
           )
           cat > dist/INSTALL.txt <<'EOF'
-          NovaBlock Android 0.3.0
+          NovaBlock Android 0.4.0
 
           Install NovaBlock-Android-debug.apk on Android 7.0 or newer.
-          This is an installable debug-signed APK for testing. A future build signed
-          with a different debug key may not update over this installation.
+          This is a debug-signed testing APK. Future builds signed with a different
+          debug key may not update over this installation.
 
-          Includes the NovaBlock launcher UI, online Eaglercraft client shortcuts,
-          WebGL/WebAssembly diagnostics, and import for a user-supplied standalone
-          offline HTML client. A full offline game runtime is not bundled.
+          EaglercraftX 1.8.8 is downloaded from the published offline-client source
+          on the first launch, unpacked into app-private storage, and launched inside
+          NovaBlock's WebView. Later launches use the cached local client. The client
+          detects touch screens and enables its mobile controls automatically.
+          Other catalog versions run inside the in-app WebView. A user-supplied
+          standalone HTML client can also be imported.
           EOF
           printf 'Commit: %s\nBuild: %s\n' "$GITHUB_SHA" "$GITHUB_RUN_NUMBER" > dist/BUILD-INFO.txt
           ls -lh dist
@@ -117,7 +131,7 @@ jobs:
       - name: Upload installable APK and build verification files
         uses: actions/upload-artifact@v4
         with:
-          name: NovaBlock-Android-0.3.0
+          name: NovaBlock-Android-0.4.0
           path: |
             dist/NovaBlock-Android-debug.apk
             dist/SHA256SUMS.txt
