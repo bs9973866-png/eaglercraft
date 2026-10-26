@@ -3,13 +3,18 @@
     <application
         android:theme="@style/AppTheme"
         android:label="NovaBlock"
+        android:icon="@drawable/ic_launcher"
+        android:roundIcon="@drawable/ic_launcher"
         android:usesCleartextTraffic="false"
         android:hardwareAccelerated="true"
-        android:resizeableActivity="true">
+        android:resizeableActivity="true"
+        android:allowBackup="false"
+        android:supportsRtl="true">
         <activity
             android:name=".MainActivity"
             android:screenOrientation="sensorLandscape"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
