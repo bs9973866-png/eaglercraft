@@ -1,14 +1,60 @@
 {
-  "name": "NovaBlock version catalog",
-  "note": "Version entries describe targets; browser runtimes must be supplied separately and legally.",
-  "versions": [
-    {"id":"1.8.9","type":"legacy","status":"planned","runtime":"eagler-compatible"},
-    {"id":"1.12.2","type":"legacy","status":"available-target","runtime":"eagler-compatible"},
-    {"id":"1.16.5","type":"modern","status":"experimental","runtime":"wasm"},
-    {"id":"1.20.4","type":"modern","status":"planned","runtime":"wasm"},
-    {"id":"1.21.11","type":"modern","status":"experimental","runtime":"wasm"},
-    {"id":"26.1","type":"modern","status":"experimental","runtime":"wasm-gc/webgpu"},
-    {"id":"26.2","type":"modern","status":"experimental","runtime":"wasm-gc/webgpu"},
-    {"id":"26.3","type":"modern","status":"experimental","runtime":"wasm-gc/webgpu"}
-  ]
+  "name": "NovaBlock verified Eaglercraft catalog",
+  "catalogSource": "https://dev.eaglercraft.com/play",
+  "lastChecked": "2026-10-26",
+  "runtimeModel": "Browser client using JavaScript/WebAssembly and WebGL; not a bundled JVM for standard Minecraft Java Edition",
+  "available": [
+    {
+      "id": "1.8.8",
+      "label": "EaglercraftX 1.8.8",
+      "channel": "stable",
+      "launchUrl": "https://dev.eaglercraft.com/play?version=1.8.8"
+    },
+    {
+      "id": "1.12.2",
+      "label": "Eaglercraft 1.12.2",
+      "channel": "development",
+      "launchUrl": "https://dev.eaglercraft.com/play?version=1.12.2"
+    },
+    {
+      "id": "26.2",
+      "label": "Eaglercraft 26.2",
+      "channel": "modern",
+      "launchUrl": "https://dev.eaglercraft.com/play?version=26.2"
+    },
+    {
+      "id": "26.3",
+      "label": "Eaglercraft 26.3",
+      "channel": "preview",
+      "launchUrl": "https://dev.eaglercraft.com/play?version=26.3"
+    },
+    {
+      "id": "1.5.2",
+      "label": "Eaglercraft 1.5.2",
+      "channel": "legacy",
+      "launchUrl": "https://dev.eaglercraft.com/play?version=1.5.2"
+    }
+  ],
+  "notInVerifiedBrowserCatalog": [
+    {
+      "id": "1.8.9",
+      "reason": "No verified Eaglercraft browser client listed in the checked public catalog."
+    },
+    {
+      "id": "1.16.5",
+      "reason": "No verified Eaglercraft browser client listed in the checked public catalog."
+    },
+    {
+      "id": "1.20.4",
+      "reason": "No verified Eaglercraft browser client listed in the checked public catalog."
+    },
+    {
+      "id": "1.21.11",
+      "reason": "No verified Eaglercraft browser client listed in the checked public catalog."
+    }
+  ],
+  "offlineImport": {
+    "formats": ["html", "htm"],
+    "note": "Only import a self-contained offline HTML client. ZIP packages must be extracted first. Distribute only clients and assets you have permission to use."
+  }
 }
